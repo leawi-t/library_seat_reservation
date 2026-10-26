@@ -1,38 +1,27 @@
-# Copy this file to the root of your group's repository as project.yaml.
-# The course reads it with a program, so:
-# - keep every key exactly as it is spelled here; change only the values;
-# - put every value in double quotes;
-# - indent with spaces, never with tabs;
-# - list all four members, each starting with "- name:".
-# Check that GitHub shows the file without an error before you submit the
-# link to your repository.
-
 schema: "1"
 
-# Your working title. You may change it later; keep this file up to date.
-title: "Campus Lost and Found"
+title: "Library seat and book reservation"
 
-# One sentence: "An app that helps [users] to [do what] so that [benefit]."
-summary: "An app that helps students to report and find lost items on campus so that more of them are returned."
+summary: "A campus library app that lets students browse books and reserve study seats in real time, featuring camera-based barcode and QR check-ins, offline reservation access, and an AI-powered reading assistant."
 
 members:
-  - name: "Leawi Taddesse"              # full name, as in the student register
-    student_id: "UGR/4913/16"         # exactly as on your student ID card
-    email: "leawitad234@gmail.com" # an address you read every day
-    github: "leawi-t"            # your GitHub username, without @
-    lab_folder: "labs/abebe-kebede"   # where your individual labs are
-  - name: ""
-    student_id: ""
-    email: ""
-    github: ""
-    lab_folder: ""
-  - name: ""
-    student_id: ""
-    email: ""
-    github: ""
-    lab_folder: ""
-  - name: ""
-    student_id: ""
-    email: ""
-    github: ""
-    lab_folder: ""
+  - name: "Leawi Taddesse"             
+    student_id: "UGR/4913/16"        
+    email: "leawitad234@gmail.com" 
+    github: "leawi-t"         
+    lab_folder: "labs/Leawi-Taddesse"
+  - name: "Latera Tilahun"
+    student_id: "UGR/3357/16"
+    email: "latera.ugr-3357-16@aau.edu.et"
+    github: "Laterat"
+    lab_folder: "labs/Latera-Tilahun"
+  - name: "Nahim Teklu"
+    student_id: "UGR/6849/16"
+    email: "Nahimteklu0@gmail.com"
+    github: "nahim13"
+    lab_folder: "labs/Nahim-Teklu"
+  - name: "Rame Mahamat"
+    student_id: "UGR/1721/16"
+    email: "rame.ugr-1721-16@aau.edu.et"
+    github: "Ra58ad"
+    lab_folder: "labs/Rame-Mahamat"
