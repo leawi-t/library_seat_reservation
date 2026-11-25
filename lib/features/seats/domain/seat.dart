@@ -1,20 +1,20 @@
-// Placeholder for @freezed Seat model
-class Seat {
-  const Seat({
-    required this.id,
-    required this.code,
-    required this.floorArea,
-    required this.hasPowerOutlet,
-    required this.isQuietZone,
-    required this.isAvailable,
-    this.currentReservationId,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String id;
-  final String code;
-  final String floorArea;
-  final bool hasPowerOutlet;
-  final bool isQuietZone;
-  final bool isAvailable;
-  final String? currentReservationId;
+part 'seat.freezed.dart';
+part 'seat.g.dart';
+
+@freezed
+abstract class Seat with _$Seat {
+  const factory Seat({
+    required String id,
+    required String code,
+    required String floorArea,
+    required bool hasPowerOutlet,
+    required bool isQuietZone,
+    required bool isAvailable,
+    String? currentReservationId,
+  }) = _Seat;
+
+  factory Seat.fromJson(Map<String, dynamic> json) =>
+      _$SeatFromJson(json);
 }
