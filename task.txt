@@ -1,0 +1,66 @@
+Milestone 1 is due on Friday 27 November 2026 at 23:59. It is worth 15 % of the project mark. This message describes what your group must deliver and how it is marked.
+
+
+
+PURPOSE
+
+Milestone 1 shows that your app has its full structure: every screen from your proposal exists, the screens connect through navigation, and the app keeps its state in providers. The data is still in memory, so nothing is saved and no server is involved yet.
+
+
+
+WHAT TO DELIVER IN YOUR GROUP REPOSITORY
+
+Feature-first structure. Organize the code as lib/core and lib/features/<feature>/{domain,data,presentation}.
+All screens from your proposal. Every screen must be reachable through go_router. Use bottom navigation or a drawer, and detail routes with parameters.
+State in Riverpod. Use providers with freezed models, and in-memory repositories behind interfaces. State belongs in providers, not in widgets.
+Tests. Include at least five unit or widget tests.
+Analyzer and test output. Run flutter analyze --fatal-infos and flutter test on the tagged commit and paste the output into MILESTONE.md. Both must pass without errors.
+MILESTONE.md in the repository root, containing:
+what is done and what is not;
+for each member, the pull requests they authored and the pull requests they reviewed;
+your group's self-score against the marking list below, with one sentence of evidence per item, written before you tag;
+one thing your group will change before Milestone 2.
+AI_USAGE.md, using the template in project/AI_USAGE-template.md.
+
+
+HOW TO SUBMIT
+
+Tag the final commit and push the tag:
+
+
+
+git tag m1
+
+git push origin m1
+
+
+
+HOW MILESTONE 1 IS MARKED (10 POINTS)
+
+All proposed screens present and navigable: 3 points
+Feature-first structure; state in providers, not widgets: 2 points
+Tests present; analyzer and tests clean in the pasted output: 1 point
+Repository hygiene: branches, pull requests, readable history: 1 point
+Individual oral check, recorded per member: 3 points
+
+
+INDIVIDUAL ORAL CHECK
+
+I will review the tagged commit and hold an oral check with each member in the lab that follows the deadline. Every member must be able to explain the code of the app and the pull requests they authored and reviewed. Three of the ten points depend on this check, so each member should know the whole structure of the app, not only their own part.
+
+
+
+REPOSITORY REQUIREMENTS
+
+Work on feature branches and merge through pull requests. Every member should author and review pull requests.
+Write commit messages that describe the change, so the history is readable.
+project.yaml must be up to date, with four or five members, each with a GitHub username.
+Your PROPOSAL.md commit must carry the proposal tag.
+If your repository is private, the instructor and the TAs must be collaborators.
+If your proposal was returned as "approved with changes", make the listed changes before you tag m1. If it was returned as "revise and resubmit", do not start Milestone 1 work on the parts that must be revised.
+
+
+Continuous integration is not required for this milestone. Data persistence, the REST service and Firebase belong to Milestone 2.
+
+
+
