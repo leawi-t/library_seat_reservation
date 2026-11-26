@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'app_spacing.dart';
+import 'app_status_colors.dart';
+
 /// App theme configuration and design tokens.
 class AppTheme {
   const AppTheme._();
@@ -11,13 +14,14 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       useMaterial3: true,
+      extensions: const [AppStatusColors.light],
     );
   }
 
-  // Spacing constants
-  static const double spacingXs = 4.0;
-  static const double spacingSm = 8.0;
-  static const double spacingMd = 16.0;
-  static const double spacingLg = 24.0;
-  static const double spacingXl = 32.0;
+  // Kept for existing callers; new code should use [AppSpacing].
+  static const double spacingXs = AppSpacing.xs;
+  static const double spacingSm = AppSpacing.sm;
+  static const double spacingMd = AppSpacing.md;
+  static const double spacingLg = AppSpacing.lg;
+  static const double spacingXl = AppSpacing.xl;
 }
