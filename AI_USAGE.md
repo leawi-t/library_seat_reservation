@@ -2,6 +2,24 @@
 
 ## Tools used
 
+| Tool | Version / model | Used for |
+|---|---|---|
+| Gemini | 4 Neon | Initial scaffold architecture and placeholder screens, checking compatible library versions (including the `mobile_scanner` and `permission_handler` API shapes for the scanner service), planning consistent team design rules, and verifying PR consistency |
+| ChatGPT | 6 Luna | Generating widget test scaffolding (including the `ScannerScreen` and `ScannerNotifier` test harnesses), understanding bugs, explaining `AsyncNotifier` testing with `ProviderContainer`, and reviewing file implementations |
+
+## What was generated and where
+
+| File / function | Member | AI-use level | What the tool produced | What we changed | How we verified it |
+|---|---|---|---|---|---|
+| `lib/core/router/app_router.dart` | Leawi Taddesse | 2 | Suggestions on how to improve our attempted `go_router` design | Refined the route structure and shell branches based on suggestions | Ran `flutter analyze --fatal-infos` and manually tested tab and detail navigation |
+| `test/features/seats/presentation/seat_browser_screen_test.dart` | Leawi Taddesse | 3 | Drafted widget tests for `SeatBrowserScreen` to match Milestone 1 requirements | Added an extra test case and adjusted assertions to match our UI | Reviewed line by line for logical issues and ran `flutter test` and `flutter analyze --fatal-infos` |
+| `lib/features/scanner/domain/scan_code_parser.dart` | Nahim Teklu | 2 | Review comments on the regex-based parser, including a suggestion to normalise ISBN separators and allow ISBN-10 with a trailing `X` | Kept our own `ScanCodeParser` structure; added the `[\s-]` separator stripping and the `X` check digit | Ran `scan_code_parser_test.dart` for typed, lowercase, `SEAT-` prefixed, hyphenated and invalid inputs; walked through each regex by hand |
+| `lib/features/scanner/presentation/scanner_provider.dart` (`ScannerNotifier`) | Nahim Teklu | 2 | Explanation of why `build()` should catch platform errors and fall back to `unavailable`; review of `resolveCode` and `scan()` | Wrote the notifier ourselves; added the `try/catch` fallback and the per-mode error messages | Ran `scanner_notifier_test.dart` and `flutter analyze --fatal-infos` |
+| `lib/features/scanner/presentation/scanner_screen.dart` (`_CameraPanel`) | Nahim Teklu | 2 | Review that all four permission states were covered; suggested `switch` expressions instead of `if`/`else` chains | Kept our layout; adopted the `switch` expression; changed button labels to match the proposal ("Grant Camera Access", "Open App Settings") | Checked each state by constructing `FakeScannerService` with each permission; tested at 360 px and 900 px widths |
+| `lib/features/scanner/data/fake_scanner_service.dart` | Nahim Teklu | 1 | Explanation of how `permission_handler` behaves (denied can be re-requested, permanently denied cannot) | Wrote the fake ourselves to simulate that behaviour | Compared with the `permission_handler` docs; covered by the notifier tests |
+| `test/features/scanner/presentation/scanner_screen_test.dart` | Nahim Teklu | 3 | Drafted the `pumpScanner` helper and the first widget test (granted state), with a stub `/seats/:seatId` route | Rewrote the assertions to match our real UI strings; added the denied → granted recovery test, the permanently-denied test, the manual-code navigation test and the invalid-code test | Reviewed line by line; ran `flutter test test/features/scanner` and `flutter analyze --fatal-infos`; briefly broke the `/seats/:seatId` route to confirm the navigation test fails when it should |
+| `test/features/scanner/presentation/scanner_notifier_test.dart` | Nahim Teklu | 3 | Drafted the `makeContainer` helper with `overrideWithValue` and `addTearDown` | Wrote the permission-transition tests and the `resolveCode` / `scan()` tests ourselves | Same as above; confirmed each test fails if the fake's behaviour is changed |
+| `test/features/scanner/domain/scan_code_parser_test.dart` | Nahim Teklu | 0 | None | Written entirely by the member | Ran `flutter test` |
 | Tool    | Version / model | Used for                                                                                                                                                         |
 | ------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Gemini  | 4 Neon          | Initial scaffold architecture and placeholder screens, checking compatible library versions, planning consistent team design rules, and verifying PR consistency |
@@ -24,15 +42,28 @@
 - **Seat domain model & repository contract:** Designed the `Seat` `@freezed` model, `SeatRepository` interface, and campus-specific in-memory seed data directly from our proposal before asking an assistant for verification.
 - **Initial screen & filter implementations:** Attempted the core structure of `SeatBrowserScreen` and Riverpod filter providers first, using AI only when stuck or to verify edge cases.
 - **Peer PR review:** Reviewed the `reservations` feature PR (`lib/features/reservations/`) for architecture and theme consistency before using AI as a second check.
+- **Scanner domain model:** Designed `CameraPermissionStatus` (granted / denied / permanentlyDenied / unavailable), `ScannerMode`, `ScanTarget` and the `ScannerService` interface from section 9 of the proposal before asking an assistant anything. Done alone because the four permission outcomes are the core of Story 3.
+- **First version of `ScanCodeParser` and its tests:** Written first because the seat-code and ISBN rules are our own (`A-101` → `seat_a101`), so no tool could know them.
+- **Manual-entry fallback flow:** Designed "manual entry always works" and the routing to `/seats/:seatId` before asking for any review, so the user is never blocked.
 - **Reservations and seat booking (Latera Tilahun):** Designed the `Reservation` and `BookingDraft` `@freezed` models, the `BookingFailure` enum, the `ReservationRepository` contract, the seat detail screen and the cancel dialog myself before asking an assistant anything, because the whole booking flow depends on them and I had to be able to explain them in the oral check.
 - **Peer PR review (Latera Tilahun):** Reviewed PR #2 (seats domain and data, approved after `flutter analyze --fatal-infos` and `flutter test` passed 7/7) and PR #4 (seat browser UI and filter providers) against our team rules before using AI as a second check, so the review would be my own judgement first.
 
 ## Problems found in AI output
 
 - Caught generated code that used a deprecated Riverpod API incompatible with the package version in `pubspec.yaml`; updated it to the current Riverpod syntax and verified with `flutter analyze --fatal-infos`.
+- **Premature real implementation (scanner):** A suggestion imported `mobile_scanner` and `permission_handler` directly into `ScannerScreen`. That would break the widget tests and violate our rule that features sit behind an abstract service. The screen now talks only to `ScannerService`; the real implementation is for the final submission.
+- **`copyWith` with `null` (scanner):** Generated code assumed `copyWith(errorMessage: null)` would keep the old value. For a nullable `@freezed` field it clears it. Confirmed with the test `resolveCode sets an error for invalid input and clears it later`.
+- **ISBN-10 check digit (scanner):** The tool's first regex only accepted digits, so ISBN-10 values ending in `X` were rejected. Fixed the pattern to `\d{9}[\dX]` and added a test (`0-306-40615-x`).
+- **Wrong claim about permissions (scanner):** An explanation said a permanently denied permission can be re-requested from the app. That is not true. `FakeScannerService.requestPermission` now stays `permanentlyDenied` until `openSettings` is used, and this is tested.
 
 ## Individual declaration
 
+| Name | I wrote or reviewed and can explain these files | I entered no passwords, keys or personal data into an AI tool (yes / no) | Signature |
+|---|---|---|---|
+| Leawi Taddesse | **Wrote:** `lib/core/router/app_router.dart`, `lib/features/seats/` (except `seat_detail_screen.dart`), `test/features/seats/`; **Reviewed:** `lib/features/reservations/`, `test/features/reservations/` | yes | Leawi Taddesse |
+| Nahim Teklu | **Wrote:** `lib/features/scanner/` (all files except the generated `*.freezed.dart`), `test/features/scanner/`; **Reviewed:** the `/scanner` route in `lib/core/router/app_router.dart` | yes | Nahim Teklu |
+| | | | |
+| | | | |
 | Name           | I wrote or reviewed and can explain these files                                                                                                                                                                                                                                                                                                                                                                                                        | I entered no passwords, keys or personal data into an AI tool (yes / no) | Signature      |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | -------------- |
 | Leawi Taddesse | **Wrote:** `lib/core/router/app_router.dart`, `lib/features/seats/` (except `seat_detail_screen.dart`), `test/features/seats/`; **Reviewed:** `lib/features/reservations/`, `test/features/reservations/`                                                                                                                                                                                                                                              | yes                                                                      | Leawi Taddesse |
