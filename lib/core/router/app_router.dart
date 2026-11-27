@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/catalog/presentation/ai_study_summary_screen.dart';
 import '../../features/catalog/presentation/book_catalog_screen.dart';
+import '../../features/catalog/presentation/book_detail_screen.dart';
+import '../../features/catalog/presentation/study_note_detail_screen.dart';
 import '../../features/reservations/presentation/my_reservations_screen.dart';
 import '../../features/scanner/presentation/scanner_screen.dart';
 import '../../features/seats/presentation/seat_browser_screen.dart';
@@ -44,6 +47,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.catalog,
                 builder: (context, state) => const BookCatalogScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':isbn',
+                    builder: (context, state) {
+                      final isbn = state.pathParameters['isbn']!;
+                      return BookDetailScreen(isbn: isbn);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'summary',
+                        builder: (context, state) {
+                          final isbn = state.pathParameters['isbn']!;
+                          final topic =
+                              state.uri.queryParameters['topic'] ?? '';
+                          return AiStudySummaryScreen(
+                            isbn: isbn,
+                            initialTopic: topic,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -62,6 +88,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.reservations,
                 builder: (context, state) => const MyReservationsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'notes/:noteId',
+                    builder: (context, state) {
+                      final noteId = state.pathParameters['noteId']!;
+                      return StudyNoteDetailScreen(noteId: noteId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

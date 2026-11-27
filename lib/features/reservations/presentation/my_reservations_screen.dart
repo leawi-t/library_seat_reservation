@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_spacing.dart';
+import '../../catalog/presentation/widgets/saved_study_notes_section.dart';
 import 'reservations_provider.dart';
 import 'widgets/active_reservation_card.dart';
 import 'widgets/no_active_reservation_card.dart';
@@ -44,6 +45,8 @@ class _ReservationsContent extends ConsumerWidget {
           const NoActiveReservationCard()
         else
           ActiveReservationCard(reservation: active),
+        const SizedBox(height: AppSpacing.lg),
+        const SavedStudyNotesSection(),
         const SizedBox(height: AppSpacing.lg),
         const ReservationPreferencesSection(),
       ],
