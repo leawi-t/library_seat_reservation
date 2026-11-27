@@ -2,7 +2,10 @@ import '../domain/reservation.dart';
 import '../domain/reservation_repository.dart';
 
 class InMemoryReservationRepository implements ReservationRepository {
-  final List<Reservation> _reservations = [];
+  InMemoryReservationRepository({List<Reservation>? reservations})
+      : _reservations = List.of(reservations ?? const []);
+
+  final List<Reservation> _reservations;
 
   @override
   Future<List<Reservation>> getReservations(String userId) async {
@@ -16,6 +19,10 @@ class InMemoryReservationRepository implements ReservationRepository {
 
   @override
   Future<void> cancelReservation(String reservationId) async {
-    _reservations.removeWhere((r) => r.id == reservationId);
+    final index = _reservations.indexWhere((r) => r.id == reservationId);
+    if (index == -1) return;
+    _reservations[index] = _reservations[index].copyWith(
+      status: ReservationStatus.cancelled,
+    );
   }
 }

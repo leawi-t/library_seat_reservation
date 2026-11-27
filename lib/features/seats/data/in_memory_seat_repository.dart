@@ -128,4 +128,22 @@ class InMemorySeatRepository implements SeatRepository {
 
     return reservedSeat;
   }
+
+  @override
+  Future<Seat> releaseSeat(String id) async {
+    final index = _seats.indexWhere((seat) => seat.id == id);
+
+    if (index == -1) {
+      throw StateError('Seat with ID $id does not exist.');
+    }
+
+    final releasedSeat = _seats[index].copyWith(
+      isAvailable: true,
+      currentReservationId: null,
+    );
+
+    _seats[index] = releasedSeat;
+
+    return releasedSeat;
+  }
 }

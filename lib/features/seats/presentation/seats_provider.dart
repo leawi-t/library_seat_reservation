@@ -12,3 +12,10 @@ final seatsProvider = FutureProvider<List<Seat>>((ref) async {
   final repository = ref.watch(seatRepositoryProvider);
   return repository.getSeats();
 });
+
+/// A single seat for the detail screen; `null` when the id is unknown.
+final seatDetailProvider =
+    FutureProvider.autoDispose.family<Seat?, String>((ref, seatId) async {
+  final repository = ref.watch(seatRepositoryProvider);
+  return repository.getSeatById(seatId);
+});
