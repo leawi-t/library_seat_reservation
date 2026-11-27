@@ -12,6 +12,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Library Seats'), findsOneWidget);
-    expect(find.text('Seat Browser (Screen 1)'), findsOneWidget);
+    expect(find.text('Power Outlet'), findsOneWidget);
+    expect(find.text('Quiet Zone'), findsOneWidget);
+    expect(find.text('A-101'), findsOneWidget);
   });
 }
