@@ -122,4 +122,11 @@ class _FakeSeatRepository implements SeatRepository {
       'reserveSeat is not needed in these widget tests.',
     );
   }
+
+  @override
+  Future<Seat> releaseSeat(String id) {
+    throw UnimplementedError(
+      'releaseSeat is not needed in these widget tests.',
+    );
+  }
 }
