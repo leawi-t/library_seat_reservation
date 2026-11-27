@@ -13,4 +13,12 @@ class AppRoutes {
   static String seatDetail(String seatId) => '/seats/$seatId';
 
   static String bookDetail(String isbn) => '/catalog/$isbn';
+
+  static String aiSummary(String isbn, {String? topic}) {
+    final base = '/catalog/$isbn/summary';
+    if (topic == null || topic.trim().isEmpty) return base;
+    return Uri(path: base, queryParameters: {'topic': topic}).toString();
+  }
+
+  static String studyNoteDetail(String noteId) => '/reservations/notes/$noteId';
 }
