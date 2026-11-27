@@ -7,18 +7,9 @@ import '../../features/scanner/presentation/scanner_screen.dart';
 import '../../features/seats/presentation/seat_browser_screen.dart';
 import '../../features/seats/presentation/seat_detail_screen.dart';
 import '../widgets/main_shell.dart';
+import 'app_routes.dart';
 
-/// Centralized route paths to avoid hardcoded string typos.
-class AppRoutes {
-  const AppRoutes._();
-
-  static const String seats = '/seats';
-  static const String catalog = '/catalog';
-  static const String scanner = '/scanner';
-  static const String reservations = '/reservations';
-
-  static String seatDetail(String seatId) => '/seats/$seatId';
-}
+export 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
